@@ -67,7 +67,7 @@ namespace RozaVetrov_TarifEditor
             => this.Close();
         
         private void OpenPriceSiteButton(object sender, RoutedEventArgs e)
-            => Link.OpenInBrowser("https://github.com/vgy789/RozaVetrov_TarifEditor/tree/master/docs/Прайс-лист.xlsx");
+            => Link.OpenInBrowser("https://github.com/vgy789/RozaVetrov-Progress/blob/master/docs/price-list.xlsx");
 
         private void OpenCalcSiteButton(object sender, RoutedEventArgs e)
             => Link.OpenInBrowser("http://localhost:8099/");
