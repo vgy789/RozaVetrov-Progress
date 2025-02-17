@@ -8,9 +8,7 @@
 
 ![](./docs/calc-to-web.png)
 
-## Установка и запуск
-
-### Структура каталогов
+## Структура каталогов
 ```md
 .
 ├── RozaVetrov_TarifEditor  # Редактор тарифов C#-приложение
@@ -20,7 +18,7 @@
     └── docker-compose.yml  # nginx с веб-калькулятором, rest api, postgresql
 ```
 
-### Установка и запуск
+## Установка и запуск
 ```bash
 # Docker-контейнеры
 cd docker-services
