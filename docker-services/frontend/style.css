@@ -1,0 +1,45 @@
+body {
+	font-family: "Roboto Mono";
+}
+
+.row {
+   margin-left: 0;
+   margin-right: 0;
+}
+
+.row-margin {
+	margin-left: 0;
+    margin-right: 0;
+	margin-bottom: 20px;
+}
+
+.firstPar {
+    /*border:2px solid #0000FF; */
+    width:550px; /* ширина блока */
+    height:auto; /* высота блока */
+}
+
+.block {
+    display: inline-block;
+}
+
+.form-header {
+	font-weight: 600;
+	font-size: 12px;
+	line-height: 1.25;
+	margin-bottom: 8px;
+}
+
+.slider{
+	width: 250px;
+}
+
+.form-input {
+	width: 250px;
+	height: 24px;
+}
+
+.form-select {
+	width:250px;
+	height: 24px;
+}

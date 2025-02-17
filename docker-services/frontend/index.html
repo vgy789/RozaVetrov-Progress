@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Главная</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://snipp.ru/cdn/chosen/1.8.7/chosen.min.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css" rel="stylesheet">
+	
+	
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/css/select2.min.css" rel="stylesheet"/>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/js/select2.min.js"></script>
+</head>
+<body>
+	<div class="firstPar">
+		<div class="row row-margin">
+			<div class="col">
+				<header class="form-header" for="from_city">Откуда отправлять</header>
+				<select class="form-control" id="from_city">
+				</select> 
+			</div>
+			
+			<div class="col">
+				<header class="form-header" for="in_city">Куда доставлять</header>
+				<select class="form-control" id="in_city">
+				</select> 
+			</div>
+		</div>
+		
+		<div class="row row-margin">
+			<div class="col">
+				<header class="form-header">Вес груза</header>
+				<input class="form-input" id="weight_input" placeholder="кг." type="text">
+				<input class="slider" id="weightRange" type="range" min="1" max="5000" step="1" value="1">
+			</div>
+			
+			<div class="col">
+				<header class="form-header">Объём груза</header>
+				<input class="form-input" id="size_input" placeholder="м³" type="text"> 
+				<input class="slider" id="sizeRange" type="range" step="0.1" min="0.1" max="20.0" value="0.01" value="0.1"> 
+			</div>
+		</div>
+	
+		<div class="row">
+			<div class="col">
+				<button onclick='GetPriceTransportation()'>Узнать цену</button>
+			</div>
+			<div class="col">
+				<h6 id="price_val"></h6>
+			</div>
+		</div>
+	</div>
+	
+	<script>
+		const BASE_API_URL = 'http://localhost:3000/';
+		
+		GetTransportations();
+		
+		
+		function GetTransportations() {
+			GetFromcityTransportations();
+			GetIncityTransportations();
+		}
+		
+		async function GetIncityTransportations() {
+			// отправляет запрос и получает ответ
+			const response = await fetch(BASE_API_URL + "rpc/get_incity", {
+				method: "GET",
+				headers: { "Accept": "application/json" }
+			});
+
+			if (response.ok === true) {
+				AddValuesInSelect("in_city", response);
+			}
+		}
+		
+		async function GetFromcityTransportations() {
+			// отправляет запрос и получает ответ
+			const response = await fetch(BASE_API_URL + "rpc/get_fromcity", {
+				method: "GET",
+				headers: { "Accept": "application/json" }
+			});
+			
+			if (response.ok === true) {
+				AddValuesInSelect("from_city", response);
+			}
+		}
+		
+		async function AddValuesInSelect(name_select, response) {
+			// получаем данные
+			const transportations = await response.json();
+			// элемент куда 
+			let rows = document.getElementById(name_select);
+			
+			if (name_select === "from_city")
+			{
+				transportations.forEach(el => {
+					rows.append(row_from(el));
+				});
+			} else if (name_select === "in_city") {
+				transportations.forEach(el => {
+					rows.append(row_in(el))
+				});
+			}
+		}
+		
+		function row_from(transportation) {
+			const optgroup = document.createElement("optgroup");
+			optgroup.setAttribute("label", transportation.subject);
+
+			const cityOption = document.createElement("option");
+				
+				cityOption.setAttribute("value", transportation.fromcity_id);
+				let str = transportation.city +" ("+transportation.subject+")";
+				cityOption.append(str);
+			return cityOption;
+		}
+		
+		function row_in(transportation) {
+			const optgroup = document.createElement("optgroup");
+			optgroup.setAttribute("label", transportation.subject);
+
+			const cityOption = document.createElement("option");
+				
+				cityOption.setAttribute("value", transportation.incity_id);
+				let str = transportation.city +" ("+transportation.subject+")";
+				cityOption.append(str);
+			return cityOption;
+		}
+	</script>
+	
+	
+</body>
+</html>
+
+
+<script>
+	function numberWithSpaces(x) {
+		return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+	}
+
+	var weightSlider = document.getElementById("weightRange");
+	var weightOutput = document.getElementById("weight_input");
+	weightOutput.value = numberWithSpaces(weightSlider.value);
+
+	weightSlider.oninput = function() {
+		weightOutput.value = numberWithSpaces(this.value);
+	}
+</script>
+
+<script>
+	function numberWithSpaces(x) {
+		return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+	}
+
+	var sizeSlider = document.getElementById("sizeRange");
+	var sizeOutput = document.getElementById("size_input");
+	sizeOutput.value = numberWithSpaces(sizeSlider.value);
+
+	sizeSlider.oninput = function() {
+		sizeOutput.value = numberWithSpaces(this.value);
+	}
+</script>
+
+<script>
+	async function GetPrice(fromcity_id, incity_id, weight, size) {
+		const BASE_API_URL = 'http://localhost:3000/';
+		let weight_no_space = weight.replace(/\s/g, '');
+		const response = await fetch(BASE_API_URL + "rpc/calculate_price?fromcity_id="+fromcity_id+"&incity_id="+incity_id+"&size="+size+"&weight="+weight_no_space, {
+			method: "GET",
+			headers: { "Accept": "application/json" }
+		});
+
+		// если запрос прошел нормально
+		if (response.ok === true) {
+			const price = await response.json();
+			document.getElementById("price_val").innerHTML  = "Цена: " + numberWithSpaces(price) +" ₽";
+		}
+	}
+	
+	function GetPriceTransportation() {
+		let from_city = document.getElementById("from_city").value;
+		let in_city = document.getElementById("in_city").value;
+		let weight = document.getElementById("weight_input").value;
+		let size = document.getElementById("size_input").value;
+		
+		GetPrice(from_city,in_city,weight,size);
+	}
+</script>
+
+<script>
+	$(".form-control").select2({
+		width: '250px',
+		placeholder: 'Select an option',
+		tags: true
+	});
+</script>
