@@ -1,0 +1,131 @@
+﻿<Page x:Class="RozaVetrov_TarifEditor.DBEditor.SubjectEditor.PageSubject"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      
+      mc:Ignorable="d" 
+      
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="PageSubject">
+
+    <Grid Margin="0, 64, 0, 0" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ToolBarTray Grid.Row="0">
+            <ToolBar
+                Style="{DynamicResource MaterialDesignToolBar}"
+                ClipToBounds="False" >
+                <Button x:Name="UpdateButton"
+                    Click="UpdateButton_Click"
+                    ToolTip="Обновить данные таблицы"
+                    HorizontalAlignment="Right">
+                    <materialDesign:PackIcon 
+                        Kind="Reload" />
+                </Button>
+                <Separator/>
+                <TextBox x:Name="SearchBox"
+                    
+                    PreviewTextInput="SearchBox_PreviewTextInput"
+                    MaxLength="30"
+                    KeyUp="SearchBox_KeyUp"
+                    Height="54"
+                    FontSize="10pt"
+                    VerticalContentAlignment="Center"
+                    Grid.Column="1"
+                    materialDesign:HintAssist.Hint="Поиск по названию субъекта"
+                    materialDesign:TextFieldAssist.DecorationVisibility="Visible"
+                    BorderThickness="0"
+                    MinWidth="200" />
+                <Separator/>
+
+            </ToolBar>
+        </ToolBarTray>
+
+        <DataGrid x:Name="SubjectDataGrid" Grid.Row="1"
+            Margin="16,8"
+            CanUserAddRows="False"
+            IsReadOnly="True"
+            AutoGenerateColumns="False"
+            VerticalScrollBarVisibility="Auto" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Id"
+                    Binding="{Binding SubjectId}"
+                    Width="Auto" />
+                <DataGridTextColumn Header="Название субъекта РФ"
+                    Binding="{Binding Name}"
+                    Width="1*" />
+                <DataGridTemplateColumn Header="Действие" Width="1*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button x:Name="EditSubject"
+                                    Click="EditSubject_Click"
+                                    Style="{StaticResource MaterialDesignIconButton}"
+                                    ToolTip="Изменить значение"
+                                    Height="24"
+                                    Width="24"
+                                    >
+                                    <materialDesign:PackIcon Kind="LeadPencil"
+                                        Height="16"
+                                        Width="16"
+                                         />
+                                </Button>
+                                <Button x:Name="DeleteSubject"
+                                    Click="DeleteSubject_Click"
+                                    Style="{StaticResource MaterialDesignIconButton}"
+                                    ToolTip="Удалить значение"
+                                    Height="24"
+                                    Width="24">
+                                    <materialDesign:PackIcon Kind="DeleteForever"
+                                        Height="16"
+                                        Width="16" />
+                                </Button>
+                            </StackPanel>
+
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Button x:Name="AddSubjectButton"
+                Click="AddSubjectButton_Click"
+                Grid.RowSpan="10"
+                Grid.Column="2"
+                Margin="16,0,16,16"
+                Style="{StaticResource MaterialDesignFloatingActionButton}"
+                materialDesign:ShadowAssist.ShadowDepth="Depth2" 
+                ToolTip="Добавить cубъект">
+                <materialDesign:PackIcon
+                    Kind="Plus"
+                    Height="24"
+                    Width="24" />
+            </Button>
+
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="16,0">
+                <Label Content="Записей Итого: "/>
+                <Label Name="TotalViewSubjectsLabel" FontStyle="Italic" Content="количество"/>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="16,0">
+                <Label Content="Дата последнего изменения: "/>
+                <Label Name="DateLatestChangesLabel" FontStyle="Italic" Content="дата"/>
+            </StackPanel>
+        </Grid>
+
+    </Grid>
+</Page>
