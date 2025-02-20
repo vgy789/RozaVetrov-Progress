@@ -54,12 +54,28 @@ namespace RozaVetrov_TarifEditor.PageMain
         /// </summary>
         private void GetIn()
         {
-            RememberLogin(IsRememberLogin());
-
-
-            if (DBConnecting() == true)
+            try
             {
-                OpenDBEditor();
+                if (string.IsNullOrWhiteSpace(LoginTextBox.Text) || string.IsNullOrWhiteSpace(PasswordPasswordBox.Password))
+                {
+                    MessageBox.Show("Please enter both login and password", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                RememberLogin(IsRememberLogin());
+
+                if (DBConnecting())
+                {
+                    OpenDBEditor();
+                }
+                else
+                {
+                    MessageBox.Show("Invalid login or password", "Authentication Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error during authentication: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -78,8 +94,12 @@ namespace RozaVetrov_TarifEditor.PageMain
         /// <returns></returns>
         private bool DBConnecting()
         {
-            return OdbConnectHelper.dbObj.User.Any(x => x.Login == LoginTextBox.Text) &&
-                OdbConnectHelper.dbObj.User.Any(x => x.Password == PasswordPasswordBox.Password);
+            if (OdbConnectHelper.dbObj == null)
+                return false;
+
+            var user = OdbConnectHelper.dbObj.User
+                .FirstOrDefault(x => x.Login == LoginTextBox.Text && x.Password == PasswordPasswordBox.Password);
+            return user != null;
         }
 
         /// <summary>

@@ -58,7 +58,7 @@ namespace RozaVetrov_TarifEditor.Domain
         private static bool IsTextNaturalNumeric(string str)
         {
             Regex reg = new Regex("[^0-9]");
-            if(reg.IsMatch(str) == true)
+            if (reg.IsMatch(str) == true)
                 System.Media.SystemSounds.Asterisk.Play();
             return reg.IsMatch(str);
         }

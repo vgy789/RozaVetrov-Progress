@@ -494,12 +494,7 @@ namespace RozaVetrov_TarifEditor.DBEditor.TransportationEditor
                     x.Fromcity == FromComboBox.SelectedItem as City
                     );
 
-                bool flagFind = false;
-                if (findValue != null)
-                {
-                    flagFind = true;
-                }
-                return flagFind;
+                return findValue != null;
             }
             void AddMinimalWeightPriceInTextBox()
             {
